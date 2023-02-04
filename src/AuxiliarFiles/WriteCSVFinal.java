@@ -47,14 +47,14 @@ public class WriteCSVFinal {
 			this.inputSynesk = inputSynesk;				
 		}
 		else {
-			this.inputSynesk = "src/Output/Synesketch_M49.csv";
+			this.inputSynesk = "src/Output/Synesketch.csv";
 		}
 		
 		if(inputGI != null && !inputGI.isEmpty()) {
 			this.inputGI = inputGI;				
 		}
 		else {
-			this.inputGI = "src/Output/GI_Features-1180.csv";
+			this.inputGI = "src/Output/GI_Features.csv";
 		}
 		
 		if(outputFile != null && !outputFile.isEmpty()) {
@@ -91,7 +91,7 @@ public class WriteCSVFinal {
 				    	firstline=0;
 				        while ((line = br.readLine()) != null) {
 				
-				        	//no ficheiro  do synesketch os valores em vez de estar separado por virgula e um espaço, estao separados apenas virgula 
+				        	//no ficheiro  do synesketch os valores em vez de estar separado por virgula e um espaï¿½o, estao separados apenas virgula 
 				        	if(i==2 && firstline!=0) {
 						    	 cvsSplitBy = ",";
 						    }
@@ -152,7 +152,7 @@ public class WriteCSVFinal {
 					            				 addValuesToSong += ",";
 					            			// }
 					            		 }
-				            			 System.out.printf("Ultimo caracter é  %s (em cima) (%d)\n",addValuesToSong.charAt(addValuesToSong.length()-1),i);
+				            			 System.out.printf("Ultimo caracter ï¿½  %s (em cima) (%d)\n",addValuesToSong.charAt(addValuesToSong.length()-1),i);
 				            			 if (i+1 == inputSemantic.size()) {
 				            				 StringBuilder sb = new StringBuilder(addValuesToSong);
 			            					 sb.deleteCharAt(addValuesToSong.length()-1);
@@ -170,7 +170,7 @@ public class WriteCSVFinal {
 					            				 addValuesToSong += ",";
 					            			// }
 					            		 }
-				            			 System.out.println("Ultimo caracter é " + addValuesToSong.charAt(addValuesToSong.length()-1));
+				            			 System.out.println("Ultimo caracter ï¿½ " + addValuesToSong.charAt(addValuesToSong.length()-1));
 					            		 
 				            		 }
 				            		
@@ -237,7 +237,7 @@ public class WriteCSVFinal {
 			this.inputCL = inputCL;				
 		}
 		else {
-			this.inputCL = "src/Output/CapitalLetters_M45.csv";
+			this.inputCL = "src/Output/CapitalLetters.csv";
 		}
 		
 		if(outputFile != null && !outputFile.isEmpty()) {
@@ -277,7 +277,7 @@ public class WriteCSVFinal {
 			            		if(i==0)
 			            			headerStylistic+="WordsDictionary_"+values[colunas]+",";
 			            		else {
-			            			headerStylistic+="CapitalLetters_"+values[colunas];
+									headerStylistic+="CapitalLetters_"+values[colunas];
 			            			if (colunas +1 != values.length) {
 			            				headerStylistic += ",";
 			            			}

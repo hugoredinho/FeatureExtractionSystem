@@ -34,7 +34,7 @@ public class mainApp_Synesketch {
 	ArrayList<String> ids = new ArrayList();
 	String sourceFolder;
 	
-	String outputFile = "Synesketch_M49.csv";
+	String outputFile = "Synesketch.csv";
 
 	/**
 	 * @param args

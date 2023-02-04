@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  * 1. ler a pasta com liricas (origem) 
- * 2.1. faz contagem de palavras começadas por maiuscula, execpto a 1ª palavra de cada linha
+ * 2.1. faz contagem de palavras comeï¿½adas por maiuscula, execpto a 1ï¿½ palavra de cada linha
  * 2.2. faz contagem de palavras todas em maiusculas
  * 3. guarda o output em ficheiro output (M45-capitalLetters.txt)
  * 
@@ -41,7 +41,7 @@ public class CapitalLetters_Initial {
 			this.outputFile = outputFile;			
 		}
 		else {
-			this.outputFile = outputFolder + "CapitalLetters_M45";
+			this.outputFile = outputFolder;
 		}
 
 		// read the names of the files from a folder and save them into a
@@ -132,7 +132,7 @@ public class CapitalLetters_Initial {
 		} // end for
 		WriteOperations wo = new WriteOperations();
 		wo.writeMatrixInConsole(matrix);
-		wo.writeMatrixInFile(matrix, this.outputFile,2); //enviar option para imprimir o header para Capital Letters = 2
+		wo.writeMatrixInFile(matrix, this.outputFile + "_with_POStags.csv",2); //enviar option para imprimir o header para Capital Letters = 2
 
 	}
 

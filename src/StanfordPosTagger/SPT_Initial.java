@@ -14,14 +14,14 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
  * Utilizando o Stanford POSTagger le um conjunto de files .txt e transforma
  * cada file na versao withTags ou onlyTags
  * 
- * Exemplo: onlyTags para o 1º verso da musica L001:
+ * Exemplo: onlyTags para o 1ï¿½ verso da musica L001:
  * JJ TO VB RP WRB DT NN VBZ
  * WRB PRP VBZ DT JJ NN
  * CC NN VBZ RB TO NN
  * NNP VBZ TO NN
  * NNP VBZ TO NN
  * 
- * Exemplo: withTags para o 1º verso da musica L001:
+ * Exemplo: withTags para o 1ï¿½ verso da musica L001:
  * Want/JJ to/TO find/VB out/RP where/WRB the/DT moon/NN goes/VBZ 
  * When/WRB it/PRP leaves/VBZ the/DT western/JJ sky/NN 
  * And/CC night/NN dissolves/VBZ again/RB to/TO morning/NN 
@@ -48,7 +48,7 @@ public class SPT_Initial {
 	
 	public static void main(String[] args) throws ClassNotFoundException,
 	IOException {
-		SPT_Initial spt_initial = new SPT_Initial(true,"src/Origem/L001-141.txt","teste.txt",2);
+		SPT_Initial spt_initial = new SPT_Initial(true,"src/Origem/L001-141.txt",null,2);
 	}
 	
 	public SPT_Initial(boolean onlyOneFile, String input, String outputFile, int option) throws ClassNotFoundException,IOException {
@@ -63,7 +63,7 @@ public class SPT_Initial {
 			this.outputFile = outputFile;			
 		}
 		else {
-			this.outputFile = outputFolder + "CapitalLetters_M45.txt";
+			this.outputFile = outputFolder;
 		}
 		
 		
@@ -147,11 +147,11 @@ public class SPT_Initial {
 			WriteOperations wf = new WriteOperations();
 			if (onlyOneFile) {
 				System.out.println(this.outputFile);
-				wf.writeFile(this.outputFile, textTags);
+				wf.writeFile(this.outputFile + "_with_POStags.txt", textTags);
 			}
 			else {
-				System.out.println(this.outputFile.replace(".txt", "") + filename[0] + ".txt");
-				wf.writeFile(this.outputFile.replace(".txt", "") + filename[0]+ ".txt", textTags);
+				System.out.println(this.outputFile.replace(".txt", "") + filename[0] + "_with_POStags.txt");
+				wf.writeFile(this.outputFile.replace(".txt", "") + filename[0] + "_with_POStags.txt", textTags);
 			
 			}
 		}

@@ -88,7 +88,7 @@ public class SaveInstancesInFile {
 		 */
 		
 		//this.writeMatrixInConsole(matrix);
-		String nameFile1 = "CBF_" + arg1 + "_" + arg2 + "_" + FREQ;
+		String nameFile1 = "src/Output/CBF_" + arg1 + "_" + arg2 + "_" + FREQ;
 		
 		File file2 = new File(nameFile1 + ".csv");
 		this.writeMatrixInFile(matrix, file2);
@@ -132,7 +132,7 @@ public class SaveInstancesInFile {
 		 */
 		this.calculateBoolValues();
 		//this.writeMatrixInConsole(matrix);
-		String nameFile2 = "CBF_" + arg1 + "_" + arg2 + "_" + BOOL;
+		String nameFile2 = "src/Output/CBF_" + arg1 + "_" + arg2 + "_" + BOOL;
 		//File file3 = new File(nameFile2 + "F.txt");
 		//this.writeNamesOfFeaturesNames(file3);
 		File file4 = new File(nameFile2 + ".csv");
@@ -175,7 +175,7 @@ public class SaveInstancesInFile {
 		 */
 		this.calculatenormValues();
 		this.writeMatrixInConsole(matrix);
-		String nameFile2 = "CBF_" + arg1 + "_" + arg2 + "_" + NORM;
+		String nameFile2 = "src/Output/CBF_" + arg1 + "_" + arg2 + "_" + NORM;
 		//File file3 = new File(nameFile2 + "F.txt");
 		//this.writeNamesOfFeaturesNames(file3);
 		File file4 = new File(nameFile2 + ".csv");
@@ -299,7 +299,7 @@ public class SaveInstancesInFile {
 		 */
 		this.calculatetfidfValues();
 		//this.writeMatrixInConsole(matrix);
-		String nameFile2 = "CBF_" + arg1 + "_" + arg2 + "_" + TFIDF;
+		String nameFile2 = "src/Output/CBF_" + arg1 + "_" + arg2 + "_" + TFIDF;
 		//File file3 = new File(nameFile2 + "F.txt");
 		//this.writeNamesOfFeaturesNames(file3);
 		File file4 = new File(nameFile2 + ".csv");

@@ -17,9 +17,9 @@ public class ChorusDetection {
 	static ArrayList <Bloco> array_blocos = new ArrayList <> ();
 	final double threshold = 0.2;
 	public int nrBlocoAtual = 0;
-	final static String path_musicas = "C:\\Users\\Red\\Desktop\\Investigacao2020\\datasets\\resultados_detecao_chorus_771+180\\771_180_sem_anotacao";
-	final static String path_final = "C:\\Users\\Red\\Desktop\\Investigacao2020\\datasets\\resultados_detecao_chorus_771+180\\script_771_180";
-	final static String file_indexs = "C:\\Users\\Red\\Desktop\\Investigacao2020\\datasets\\resultados_detecao_chorus_771+180\\file_indexs_script_chorus.txt";
+	final static String path_musicas = "C:\\Users\\Red\\Desktop\\Investigacao2020\\datasets\\resultados_detecao_chorus_400\\400_sem_anotacao";
+	final static String path_final = "C:\\Users\\Red\\Desktop\\Investigacao2020\\datasets\\resultados_detecao_chorus_400\\script_400";
+	final static String file_indexs = "C:\\Users\\Red\\Desktop\\Investigacao2020\\datasets\\resultados_detecao_chorus_400\\file_indexs_script_chorus.txt";
 	public ChorusDetection(String sourceFile) {
 		
 		// TODO Auto-generated constructor stub
@@ -74,7 +74,7 @@ public class ChorusDetection {
 
 		int contador = 0;
 		for (Bloco bloco_frases : array_blocos) {
-			//System.out.printf("Para o bloco %d foi adicionado %f na segunda verificação\n",nrBlocoAtual,lista_medias.get(contador) * 10);
+			//System.out.printf("Para o bloco %d foi adicionado %f na segunda verificaï¿½ï¿½o\n",nrBlocoAtual,lista_medias.get(contador) * 10);
 			updateBlock(bloco_frases,lista_medias.get(contador++) * 10);
 			nrBlocoAtual++;
 		}
@@ -203,11 +203,11 @@ public class ChorusDetection {
 					media /= lista_edit_distances.size();
 					//System.out.printf("%f %d\n",media,threshold);
 					if (media > threshold) {
-						//System.out.printf("Para o bloco %d foi retirado -10 na terceira verificação\n",i);
+						//System.out.printf("Para o bloco %d foi retirado -10 na terceira verificaï¿½ï¿½o\n",i);
 						updateBlock(array_blocos.get(i),-10);						
 					}	
 					else {
-						//System.out.printf("Para o bloco %d foi adicionado +10 na terceira verificação\nBem Como ao bloco principal (%d)\n",i,indice_melhor);
+						//System.out.printf("Para o bloco %d foi adicionado +10 na terceira verificaï¿½ï¿½o\nBem Como ao bloco principal (%d)\n",i,indice_melhor);
 						updateBlock(array_blocos.get(i),+10);
 						updateBlock(blocoPrincipal,+10);
 					}	
@@ -231,7 +231,7 @@ public class ChorusDetection {
 		int min_ed = 1000000;
 		ArrayList <Integer> lista_edit_distances = new ArrayList <Integer>();
 		switch(option) {
-			case 1: // quando tamanho da lista principal é mais pequeno do que o bloco a comparar
+			case 1: // quando tamanho da lista principal ï¿½ mais pequeno do que o bloco a comparar
 				for (FraseLetra fl_bp : blocoPrincipal.getBloco()) {
 					for (FraseLetra fl_bc : blocoComparar.getBloco()) {
 						editDistance = MinimumEditDistance.calculateEditDistance(fl_bp.getLetra(), fl_bc.getLetra());
@@ -242,7 +242,7 @@ public class ChorusDetection {
 					lista_edit_distances.add(min_ed);
 				}
 				break;
-			case 2: // quando tamanho da lista principal é igual ao tamanho do bloco
+			case 2: // quando tamanho da lista principal ï¿½ igual ao tamanho do bloco
 				for (int i = 0; i< blocoPrincipal.getTamanho(); i++) {
 					editDistance = MinimumEditDistance.calculateEditDistance(blocoPrincipal.getFraseByIndex(i).getLetra(), blocoComparar.getFraseByIndex(i).getLetra());
 					if (editDistance < min_ed) {
@@ -306,7 +306,7 @@ public class ChorusDetection {
 			}
 		}
 		if (!canBlockBeChorus) {
-			//System.out.printf("Para o bloco %d foi retirado -20 na primeira verificação\n" ,nrBlocoAtual);
+			//System.out.printf("Para o bloco %d foi retirado -20 na primeira verificaï¿½ï¿½o\n" ,nrBlocoAtual);
 			updateBlock(bloco_frases,-20);
 		}
 	}
@@ -345,7 +345,7 @@ public class ChorusDetection {
 				//	ocorrencias++;
 				//}
 				editDistance = MinimumEditDistance.calculateEditDistance(frase_letra.getLetra(), s);
-				//System.out.printf("Edit distance entre %s e %s é %d \n",frase_letra.getLetra(),s,editDistance);
+				//System.out.printf("Edit distance entre %s e %s ï¿½ %d \n",frase_letra.getLetra(),s,editDistance);
 				limite = s.length() * this.threshold;
 				if (editDistance <= limite) {
 					//System.out.printf("%s e %s sao iguais\n",frase_letra.getLetra(),s);

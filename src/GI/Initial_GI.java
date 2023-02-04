@@ -41,7 +41,7 @@ public class Initial_GI {
 	static final String outputFolder  = "src/Output/";
 
 	// file output das features
-	String outputFile = outputFolder + "GI_Features-1180";
+	String outputFile = outputFolder + "GI_Features";
 	
 	public static void main(String[] args) throws ClassNotFoundException, IOException  {
 		Initial_GI initial_gi  = new Initial_GI(null);
@@ -110,7 +110,7 @@ public class Initial_GI {
 
 		/**
 		 * 3)ler liricas 1 a 1 e para cada ler frase a frase; 4)verificar se
-		 * cada palavra das frases está no GI (matriz anterior - 1ª coluna);
+		 * cada palavra das frases estï¿½ no GI (matriz anterior - 1ï¿½ coluna);
 		 * 5)para cada palavra copiar as colunas preenchidas de gi_matrix para
 		 * feature_matrix (incrementando o num de ocorrencias dessa feature;
 		 */
@@ -146,7 +146,7 @@ public class Initial_GI {
 			}
 			
 			System.out.println("File num : "+i);
-			// guarda na feature_matrix o nome da lirica na 1ª coluna
+			// guarda na feature_matrix o nome da lirica na 1ï¿½ coluna
 			String[] data = files[i].split("\\.");
 			if (data[0].contains("/")) {
 				String [] nome = data[0].split("/");

@@ -29,8 +29,8 @@ import java.io.IOException;
  *  3. para cada linha, percorrer o file de anew-rsmal.txt ou dal-rsmal.txt (ou outro que insira) e linha a linha destem verificar se 
  *  a linha da lirica contem as linhas do file selecionado (ex: anew-rsmal.txt) 
  *  4. contar as ocorrencias e mandar para ficheiro o relatorio. 
- *  Esse ficheiro será anew-rsmal.txtInorigem.txt ou dal-rsmal.txtInorigem.txt conforme o caso.
- * O sistema cria ainda um relatório detalhado que armazena no ficheiro outputDetails.txt
+ *  Esse ficheiro serï¿½ anew-rsmal.txtInorigem.txt ou dal-rsmal.txtInorigem.txt conforme o caso.
+ * O sistema cria ainda um relatï¿½rio detalhado que armazena no ficheiro outputDetails.txt
  * 
  * @author rsmal
  * @date
@@ -344,13 +344,13 @@ public class CombinedFeatures {
 				this.outputFile = outputFolder + "DAL_ANEW";
 			}
 			if (WordsDictionaryFeatures) {
-				this.outputFile = outputFolder + "WordsDictionary";
+				this.outputFile = outputFolder + "Slang";
 			}
 		}
 		
 	
 		wo.writeMatrixInFile2(matrix, this.outputFile,WordsDictionaryFeatures,DAL_ANEWFeatures);
-		wo.writeFile(outputFolder + "Combined_Features_outputDetails.txt", outputDetails);
+		//wo.writeFile(outputFolder + "Combined_Features_outputDetails.txt", outputDetails);
 	}
 
 }
