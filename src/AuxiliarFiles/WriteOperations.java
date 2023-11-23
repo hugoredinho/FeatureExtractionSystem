@@ -176,7 +176,7 @@ public class WriteOperations {
 			if(DAL_ANEWFeatures){		
 				out.write("Id,AvgValence,AvgArousal,AvgDominance");
 			}else {
-				out.write("Id,AvgValence,AvgArousal");
+				out.write("Id,AvgValence,AvgArousal,#Count");
 			}
 			
 		}

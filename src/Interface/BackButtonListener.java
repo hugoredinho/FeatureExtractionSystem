@@ -76,13 +76,17 @@ public class BackButtonListener implements ActionListener {
 			main_frame.setVisible(true);	
 		}
 	     else if(backtoCBF) {
+	    	MainInterface main_frame = null;
+	    	 
 	    	content_selector.dispose();
-	 		ContentFeatures frame_content = null;
-			frame_content = new ContentFeatures(content_selector.sourceFolder);
+	    	main_frame = new MainInterface(content_selector.sourceFolder);
+			/*
+			 * frame_content = new ContentFeatures(content_selector.sourceFolder);
 			frame_content.setTitle("Seleçao de features de conteudo");
 			frame_content.setSize(400,220);
 			frame_content.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame_content.setVisible(true);	
+			*/
 		}
 
     }

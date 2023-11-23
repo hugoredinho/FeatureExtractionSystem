@@ -1,0 +1,65 @@
+
+ 
+ PRP VBP VBN VBG ''
+ PRP VBP VBN VBG '' RB RB
+ 
+ PRP VBP VBN VBG ''
+ PRP VBP VBN VBG '' RB RB
+ 
+ PRP VBP NN
+ PRP MD VB NN TO PRP
+ PRP MD VB NN TO PRP
+ 
+ PRP VBP VBN NN ''
+ PRP VBP VBN VBG '' RB RB
+ 
+ PRP VBP VBN NN ''
+ PRP VBP VBN VBG '' RB RB
+ 
+ VBN RP DT NN , IN DT NN
+ IN DT NN , IN DT NN
+ RB , RB , RB CC RB RB
+ 
+ CC PRP VBD
+ NNP , NN , NN , NN
+ NNP , NN , NN , NN
+ VB PRP VB RB JJ
+ 
+ NNP , NN , NN , NN
+ NNP , NN , NN , NN
+ VB PRP VB RB
+ 
+ PRP VBP JJ , JJ , JJ
+ NNP , NN , NN , NN , NN
+ 
+ PRP VBP JJ , JJ , JJ
+ NNP , NN , NN , NN , NN
+ 
+ NN
+ 
+ CC PRP VBD
+ NNP , NN , NN , NN
+ NNP , NN , NN , NN
+ VB PRP VB RB JJ
+ 
+ NNP , NN , NN , NN
+ NNP , NN , NN , NN
+ VB PRP VB RB
+ 
+ PRP VBP IN
+ NNP , NN , NN , NN
+ NNP , NN , NN
+ 
+ PRP VBP IN
+ NNP , NN , NN , NN
+ NNP , NN , NN , NN
+ 
+ VB PRP VB RB JJ
+ 
+ VB PRP$ NN IN NN
+ 
+ VB PRP$ NN IN NN
+ 
+ NN
+ 
+ NN .

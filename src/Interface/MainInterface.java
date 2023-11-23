@@ -23,7 +23,7 @@ import Synesketch.mainApp_Synesketch;
 
 @SuppressWarnings("serial")
 public class MainInterface extends JFrame{
-	private JButton semantic_button, stylistic_button, directoryButton, content_button, structural_button;
+	private JButton semantic_button, stylistic_button, directoryButton, content_button, structural_button,standardpostagger, all_features;
 	JPanel panel;
 	JLabel warning;
 	String sourceFolder;
@@ -35,16 +35,23 @@ public class MainInterface extends JFrame{
 		stylistic_button = new JButton("Features Estilisticas");
 		content_button = new JButton("Content-Based Features");
 		structural_button = new JButton("Structural Based Features");
+		standardpostagger = new JButton("Representacao "+ "POSTags");
+		all_features = new JButton("All features");
 		
 		directoryButton = new JButton("Escolher pasta");
 		
-		warning = new JLabel("Se nao for escolhida diretoria, vai ser usada a pasta Origem por omissão.");
+		warning = new JLabel("Se nao for escolhida diretoria, vai ser usada a pasta Origem por omissÃ£o.");
 		
 		semantic_button.setBounds(30,20,200,25);
 		stylistic_button.setBounds(240,20,200,25);
 		content_button.setBounds(30,60,200,25);
-		directoryButton.setBounds(150,110,160,25);
+		directoryButton.setBounds(30,100,200,25);
 		structural_button.setBounds(240,60,200,25);
+		standardpostagger.setBounds(240,100,200,25);
+		all_features.setBounds(150,130,200,25);
+		
+		ContentFeatures C = new ContentFeatures(sourceFolder);
+		
 		warning.setBounds(25,150,450,25);
 		
 		panel = new JPanel();
@@ -53,16 +60,61 @@ public class MainInterface extends JFrame{
 		panel.add(stylistic_button);
 		panel.add(content_button);
 		panel.add(structural_button);
+		panel.add(standardpostagger);
 		panel.add(directoryButton);
 		panel.add(warning);
+		panel.add(all_features);
 		semantic_button.addActionListener(new SemanticButtonListener(this));
 		stylistic_button.addActionListener(new StylisticButtonListener(this));
-		content_button.addActionListener(new ContentButtonListener(this));
+		content_button.addActionListener(new MainInterface.CBF_ButtonListener(C));
 		structural_button.addActionListener(new StructuralButtonListener(this));
+		standardpostagger.addActionListener(new MainInterface.SPT_ButtonListener());
 		directoryButton.addActionListener(new DirectoryButtonListener());
+		all_features.addActionListener(new AllFeaturesListener());
+		
+		
 		
 		this.add(panel);
 	}
+	
+	
+	
+	private class SPT_ButtonListener implements ActionListener {	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			try {
+				SPT_Initial initial = new SPT_Initial(false,sourceFolder,null,2);
+				JOptionPane.showMessageDialog(null, "Todas StandardPosTagger features extraidas", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}			
+		}
+	}
+	
+	
+	private class CBF_ButtonListener implements ActionListener {	
+		ContentFeatures content_features;
+
+		public CBF_ButtonListener(ContentFeatures content) {
+			this.content_features = content;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			ContentSelector content_selector = null;
+			content_selector = new ContentSelector(sourceFolder,this.content_features);
+			content_selector.setTitle("Selecao de opï¿½oes de conteudo");
+			content_selector.setSize(400,220);
+			content_selector.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			content_selector.setVisible(true);			
+		}
+	}
+	
 	
 	public static void main(String[] args) {
 		if (args.length == 3) {
@@ -117,7 +169,7 @@ public class MainInterface extends JFrame{
 				}				
 				else {
 					try {
-						CBF_Initial initial = new CBF_Initial(inputFolder,arg3,arg4,arg5);				
+						CBF_Initial initial = new CBF_Initial(inputFolder,arg3,arg4,arg5, false);				
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -165,6 +217,91 @@ public class MainInterface extends JFrame{
 		}		
 	}
 	
+	private class AllFeaturesListener implements ActionListener {	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println("Button clicked");
+			mainApp_Synesketch synesktech = new mainApp_Synesketch();
+			WriteCSVFinal writecsv = new WriteCSVFinal();
+			// System.out.println("Directory");
+			try {
+				// semantic
+				String inputFile = sourceFolder;
+				
+				
+				
+				
+			    // gazeteers
+				CombinedFeatures gaz = new CombinedFeatures(false,1,false,false,false,false,inputFile,null);
+				CombinedFeatures gaz1 = new CombinedFeatures(false,2,false,false,false,false,inputFile,null);
+				CombinedFeatures gaz2 = new CombinedFeatures(false,3,false,false,false,false,inputFile,null);
+				CombinedFeatures gaz3 = new CombinedFeatures(false,4,false,false,false,false,inputFile,null);
+				CombinedFeatures gaz4 = new CombinedFeatures(false,5,false,false,false,false,inputFile,null);
+				
+				CombinedFeatures dal = new CombinedFeatures(false,0,true,false,false,false,inputFile,null); // dal anew
+				CombinedFeatures anew = new CombinedFeatures(false,0,false,true,false,false,inputFile,null); // dal anew
+				
+				
+				// now we have to combine gazeteers and dal and anew
+				
+				SemanticFeatures.combineGazeteers("src/Output");
+				
+				synesktech.readDirectory(inputFile, null); // synesktech
+				System.out.println(inputFile);
+				if (inputFile == null) {
+					Initial_GI initial= new Initial_GI("src/Origem",null); // features_gi
+				}
+				else {
+					Initial_GI initial= new Initial_GI(inputFile,null); // features_gi
+				}
+				//writecsv.WriteSemantic(null,null,null,null,null); // then we write to output file
+				
+				// stylistic
+				
+				CombinedFeatures slang  = new CombinedFeatures(false,0,false,false,false,true,inputFile,null); 
+				CapitalLetters_Initial capitalLetters = new CapitalLetters_Initial(false,inputFile,null);
+				StylisticFeatures.combineStylistic("src/Output");
+				
+				// now we have to extract the CBF
+				
+				CBF_Initial cbf = new CBF_Initial(sourceFolder,"unig","nada","freq", false);
+				cbf = new CBF_Initial(sourceFolder,"unig","nada","tfidf", false);
+				cbf = new CBF_Initial(sourceFolder,"unig","st","freq", false);
+				cbf = new CBF_Initial(sourceFolder,"unig","st","tfidf", false);
+				cbf = new CBF_Initial(sourceFolder,"unig","st_sw","freq", false);
+				cbf = new CBF_Initial(sourceFolder,"unig","st_sw","tfidf", false);
+				cbf = new CBF_Initial(sourceFolder,"big","nada","freq", false);
+				cbf = new CBF_Initial(sourceFolder,"big","nada","tfidf", false);
+				cbf = new CBF_Initial(sourceFolder,"big","st","freq", false);
+				cbf = new CBF_Initial(sourceFolder,"big","st","tfidf", false);
+				cbf = new CBF_Initial(sourceFolder,"trig","nada","freq", false);
+				cbf = new CBF_Initial(sourceFolder,"trig","nada","tfidf", false);
+				cbf = new CBF_Initial(sourceFolder,"trig","st","freq", false);
+				cbf = new CBF_Initial(sourceFolder,"trig","st","tfidf", false);
+				
+				// now with pos
+				cbf = new CBF_Initial(sourceFolder,"unig","nada","tfidf", true);
+				cbf = new CBF_Initial(sourceFolder,"big","nada","freq", true);
+				cbf = new CBF_Initial(sourceFolder,"big","nada","tfidf", true);
+				cbf = new CBF_Initial(sourceFolder,"trig","nada","freq", true);
+				cbf = new CBF_Initial(sourceFolder,"trig","nada","tfidf", true);
+				cbf = new CBF_Initial(sourceFolder,"4grams","nada","freq", true);
+				cbf = new CBF_Initial(sourceFolder,"5grams","nada","freq", true);
+				
+				
+			} catch (IOException except) {
+				// TODO Auto-generated catch block						
+				except.printStackTrace();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}		
+		}
+		
+
+	}
+	
 	public static void HandleRequest(String tipoExtracao, String inputFile, String outputFile) {
 		String [] listaOpcoes= {"all_features","stylistic_features","semantic_features","features_gi","features_synesktech","features_dal_anew","features_gazeteers","features_slang","features_capitalletters","features_standardPOS","features_cbf","features_titulo"};
 		File file = new File(inputFile);
@@ -209,7 +346,8 @@ public class MainInterface extends JFrame{
 					if (file.isDirectory()) {
 						// System.out.println("Directory");
 						try {
-							CombinedFeatures capitalLetters = new CombinedFeatures(false,false,true,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters = new CombinedFeatures(false,0,true,false,false, false,inputFile,outputFile); // dal
+							CombinedFeatures capitalletters = new CombinedFeatures(false,0,false,true,false,false, inputFile, outputFile); // anew
 						} catch (ClassNotFoundException | IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -218,7 +356,8 @@ public class MainInterface extends JFrame{
 					else if (file.isFile()) {
 						//System.out.println("File");
 						try {
-							CombinedFeatures capitalLetters = new CombinedFeatures(true,false,true,false,inputFile,outputFile);
+							CombinedFeatures dal = new CombinedFeatures(true,0,true,false,false,false,inputFile,outputFile); // dal 
+							CombinedFeatures anew = new CombinedFeatures(true,0,false,true,false,false,inputFile,outputFile); // anew
 						} catch (ClassNotFoundException | IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -231,7 +370,11 @@ public class MainInterface extends JFrame{
 					if (file.isDirectory()) {
 						// System.out.println("Directory");
 						try {
-							CombinedFeatures capitalLetters = new CombinedFeatures(false,true,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters = new CombinedFeatures(false,1,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters1 = new CombinedFeatures(false,2,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters2 = new CombinedFeatures(false,3,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters3 = new CombinedFeatures(false,4,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters4 = new CombinedFeatures(false,5,false,false,false,false,inputFile,outputFile);
 						} catch (ClassNotFoundException | IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -240,7 +383,11 @@ public class MainInterface extends JFrame{
 					else if (file.isFile()) {
 						//System.out.println("File");
 						try {
-							CombinedFeatures capitalLetters = new CombinedFeatures(true,true,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters = new CombinedFeatures(true,1,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters1 = new CombinedFeatures(true,2,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters2 = new CombinedFeatures(true,3,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters3 = new CombinedFeatures(true,4,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures capitalLetters4 = new CombinedFeatures(true,5,false,false,false,false,inputFile,outputFile);
 						} catch (ClassNotFoundException | IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -253,7 +400,7 @@ public class MainInterface extends JFrame{
 					if (file.isDirectory()) {
 						// System.out.println("Directory");
 						try {
-							CombinedFeatures initial_WD  = new CombinedFeatures(false,false,false,true,inputFile,outputFile);
+							CombinedFeatures initial_WD  = new CombinedFeatures(false,0,false,false,false,true,inputFile,outputFile);
 						} catch (ClassNotFoundException | IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -262,7 +409,7 @@ public class MainInterface extends JFrame{
 					else if (file.isFile()) {
 						//System.out.println("File");
 						try {
-							CombinedFeatures initial_WD  = new CombinedFeatures(true,false,false,true,inputFile,outputFile);
+							CombinedFeatures initial_WD  = new CombinedFeatures(true,0,false,false,false,true,inputFile,outputFile);
 						} catch (ClassNotFoundException | IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -331,8 +478,16 @@ public class MainInterface extends JFrame{
 					if (file.isDirectory()) {
 						// System.out.println("Directory");
 						try {
-							CombinedFeatures gaz = new CombinedFeatures(false,true,false,false,inputFile,null); // gazeteers
-							CombinedFeatures dal_anew = new CombinedFeatures(false,false,true,false,inputFile,null); // dal anew
+							
+							CombinedFeatures gaz = new CombinedFeatures(false,1,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures gaz1 = new CombinedFeatures(false,2,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures gaz2 = new CombinedFeatures(false,3,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures gaz3 = new CombinedFeatures(false,4,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures gaz4 = new CombinedFeatures(false,5,false,false,false,false,inputFile,outputFile);
+							
+							CombinedFeatures dal = new CombinedFeatures(false,0,true,false,false,false,inputFile,null); // dal
+							CombinedFeatures anew = new CombinedFeatures(false,0,false,true,false,false,inputFile,null); // anew
+
 							synesktech.readDirectory(inputFile, null); // synesktech
 							Initial_GI initial= new Initial_GI(inputFile,null); // features_gi
 							WriteCSVFinal writecsv = new WriteCSVFinal();
@@ -346,8 +501,15 @@ public class MainInterface extends JFrame{
 					else if (file.isFile()) {
 						//System.out.println("File");
 						try {
-							CombinedFeatures gaz_file = new CombinedFeatures(true,true,false,false,inputFile,null);
-							CombinedFeatures dal_anew_file = new CombinedFeatures(true,false,true,false,inputFile,null);
+							
+							CombinedFeatures gaz_file = new CombinedFeatures(true,1,false,false,false,false,inputFile,null);
+							CombinedFeatures gaz_file1 = new CombinedFeatures(true,2,false,false,false,false,inputFile,null);
+							CombinedFeatures gaz_file2 = new CombinedFeatures(true,3,false,false,false,false,inputFile,null);
+							CombinedFeatures gaz_file3 = new CombinedFeatures(true,4,false,false,false,false,inputFile,null);
+							CombinedFeatures gaz_file4 = new CombinedFeatures(true,5,false,false,false,false,inputFile,null);
+				
+							CombinedFeatures dal = new CombinedFeatures(true,0,true,false,false,false,inputFile,null); // dal
+							CombinedFeatures anew = new CombinedFeatures(true,0,false,true,false,false,inputFile,null); // anew
 							synesktech.readFile(inputFile, null); 
 							Initial_GI initial= new Initial_GI(inputFile,null);
 							WriteCSVFinal writecsv = new WriteCSVFinal();
@@ -365,7 +527,7 @@ public class MainInterface extends JFrame{
 					if (file.isDirectory()) {
 						// System.out.println("Directory");
 						try {
-							CombinedFeatures slang  = new CombinedFeatures(false,false,false,true,inputFile,null); 
+							CombinedFeatures slang  = new CombinedFeatures(false,0,false,false,false,true,inputFile,null); 
 							CapitalLetters_Initial capitalLetters = new CapitalLetters_Initial(false,inputFile,null);							
 							WriteCSVFinal writecsv = new WriteCSVFinal();
 							writecsv.WriteStylistic(null,null,outputFile); // then we write to output file
@@ -378,7 +540,7 @@ public class MainInterface extends JFrame{
 					else if (file.isFile()) {
 						//System.out.println("File");
 						try {
-							CombinedFeatures slang_file  = new CombinedFeatures(true,false,false,true,inputFile,null);
+							CombinedFeatures slang_file  = new CombinedFeatures(true,0,false,false,false,true,inputFile,null);
 							CapitalLetters_Initial capitalLetters_file = new CapitalLetters_Initial(true,inputFile,null);
 							WriteCSVFinal writecsv = new WriteCSVFinal();
 							writecsv.WriteStylistic(null,null,outputFile); // then we write to output file
@@ -399,19 +561,32 @@ public class MainInterface extends JFrame{
 						try {
 							// semantic
 							
-							CombinedFeatures gaz = new CombinedFeatures(false,true,false,false,inputFile,null); // gazeteers
-							CombinedFeatures dal_anew = new CombinedFeatures(false,false,true,false,inputFile,null); // dal anew
+						    // gazeteers
+							CombinedFeatures gaz = new CombinedFeatures(false,1,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures gaz1 = new CombinedFeatures(false,2,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures gaz2 = new CombinedFeatures(false,3,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures gaz3 = new CombinedFeatures(false,4,false,false,false,false,inputFile,outputFile);
+							CombinedFeatures gaz4 = new CombinedFeatures(false,5,false,false,false,false,inputFile,outputFile);
+							
+							CombinedFeatures dal = new CombinedFeatures(false,0,true,false,false,false,inputFile,null); // dal anew
+							CombinedFeatures anew = new CombinedFeatures(false,0,false,true,false,false,inputFile,null); // dal anew
+							
+							
+							// now we have to combine gazeteers and dal and anew
+							
+							SemanticFeatures.combineGazeteers("src/Output");
+							
 							synesktech.readDirectory(inputFile, null); // synesktech
 							Initial_GI initial= new Initial_GI(inputFile,null); // features_gi
-							writecsv.WriteSemantic(null,null,null,null,null); // then we write to output file
+							//writecsv.WriteSemantic(null,null,null,null,null); // then we write to output file
 							
 							// stylistic
 							
-							CombinedFeatures slang  = new CombinedFeatures(false,false,false,true,inputFile,null); 
-							CapitalLetters_Initial capitalLetters = new CapitalLetters_Initial(false,inputFile,null);	
-							writecsv.WriteStylistic(null,null,null); // then we write to output file
+							CombinedFeatures slang  = new CombinedFeatures(false,0,false,false,false,true,inputFile,null); 
+							CapitalLetters_Initial capitalLetters = new CapitalLetters_Initial(false,inputFile,null);
+							StylisticFeatures.combineStylistic("src/Output");
 							
-							writecsv.WriteAll(outputFile); // then we write to output file
+							
 							System.out.printf("All features of folder %s outputed to %s\n",inputFile,outputFile);
 						} catch (ClassNotFoundException | IOException e) {
 							// TODO Auto-generated catch block						
@@ -423,8 +598,15 @@ public class MainInterface extends JFrame{
 						try {
 							// semantic
 							
-							CombinedFeatures gaz_file = new CombinedFeatures(true,true,false,false,inputFile,null);
-							CombinedFeatures dal_anew_file = new CombinedFeatures(true,false,true,false,inputFile,null);
+							
+							CombinedFeatures gaz_file = new CombinedFeatures(true,1,false,false,false,false,inputFile,null);
+							CombinedFeatures gaz_file1 = new CombinedFeatures(true,2,false,false,false,false,inputFile,null);
+							CombinedFeatures gaz_file2 = new CombinedFeatures(true,3,false,false,false,false,inputFile,null);
+							CombinedFeatures gaz_file3 = new CombinedFeatures(true,4,false,false,false,false,inputFile,null);
+							CombinedFeatures gaz_file4 = new CombinedFeatures(true,5,false,false,false,false,inputFile,null);
+							
+							CombinedFeatures dal_file = new CombinedFeatures(true,0,true,false,false,false,inputFile,null); // dal
+							CombinedFeatures anew_file = new CombinedFeatures(true,0,false,true,false,false,inputFile,null); // anew
 							synesktech.readFile(inputFile, null); 
 							Initial_GI initial= new Initial_GI(inputFile,null);
 							writecsv.WriteSemantic(null,null,null,null,null); // then we write to output file
@@ -432,7 +614,7 @@ public class MainInterface extends JFrame{
 							
 							// stylistic
 							
-							CombinedFeatures slang_file  = new CombinedFeatures(true,false,false,true,inputFile,null);
+							CombinedFeatures slang_file  = new CombinedFeatures(true,0,false,false,false,true,inputFile,null);
 							CapitalLetters_Initial capitalLetters_file = new CapitalLetters_Initial(true,inputFile,null);
 							writecsv.WriteStylistic(null,null,null); // then we write to output file
 							

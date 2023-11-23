@@ -1,0 +1,24 @@
+
+ 
+ NNS , NNS
+ NNS IN CD
+ JJ NN
+ 
+ NNS , NN NNS
+ VBG NNS IN CD
+ JJ NN
+ 
+ `` VB . VB . '' VBZ DT NN IN DT NN NN
+ `` WRB . WRB . '' VBZ DT NN IN DT NN
+ 
+ NNP , NN , PRP , NN , NN , NN
+ NNP , NN , NN
+ NNP , NN , PRP , NN , NN , NN
+ NNP , NN , NN
+ 
+ NNS , NN NNS
+ NN JJ CC JJ
+ NNP IN PRP CC PRP
+ 
+ `` VB . VB . '' VBZ DT NN IN DT NN NN
+ `` WRB . WRB . '' VBZ DT NN IN DT NN

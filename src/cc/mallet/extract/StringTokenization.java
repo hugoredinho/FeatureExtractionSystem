@@ -64,6 +64,12 @@ public class StringTokenization extends TokenSequence implements Tokenization
     return new StringSpan (document, startIdx, endIdx);
   }
 
+  public void removeLast() {
+	    if(size() > 0) {
+	        remove(size() - 1);
+	    }
+	  }
+  
 
   public Span getSpan (int i) { return (Span) get(i); }
 

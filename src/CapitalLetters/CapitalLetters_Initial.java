@@ -132,7 +132,7 @@ public class CapitalLetters_Initial {
 		} // end for
 		WriteOperations wo = new WriteOperations();
 		wo.writeMatrixInConsole(matrix);
-		wo.writeMatrixInFile(matrix, this.outputFile + "_with_POStags.csv",2); //enviar option para imprimir o header para Capital Letters = 2
+		wo.writeMatrixInFile(matrix, this.outputFile + "Capital_Letters.csv",2); //enviar option para imprimir o header para Capital Letters = 2
 
 	}
 

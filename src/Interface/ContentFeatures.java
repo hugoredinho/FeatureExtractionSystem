@@ -14,7 +14,7 @@ import Synesketch.mainApp_Synesketch;
 @SuppressWarnings("serial")
 public class ContentFeatures extends JFrame{
 	JPanel panel_content;
-	JButton standardpostagger, features_CBF, back;
+	JButton  features_CBF, back;  //standardpostagger
 	JLabel label;
 	String sourceFolder;
 	public ContentFeatures(String sourceFolder) {
@@ -23,7 +23,7 @@ public class ContentFeatures extends JFrame{
 		panel_content = new JPanel();
 		panel_content.setLayout(null);
 		
-		standardpostagger = new JButton("StandardPosTagger");
+		//standardpostagger = new JButton("StandardPosTagger");
 		features_CBF = new JButton("CBF Features");
 
 		back = new JButton("Back");
@@ -31,23 +31,23 @@ public class ContentFeatures extends JFrame{
 		label = new JLabel("Quais features de conteudo deseja extrair?");
 		
 		label.setBounds(75,10,300,25);
-		standardpostagger.setBounds(25,40,160,25);
+		//standardpostagger.setBounds(25,40,160,25);
 		features_CBF.setBounds(200,40,160,25);
 
 		back.setBounds(120,100,160,25);
 
-		features_CBF.addActionListener(new ContentFeatures.CBF_ButtonListener(this));
-		standardpostagger.addActionListener(new ContentFeatures.SPT_ButtonListener());
+		//features_CBF.addActionListener(new ContentFeatures.CBF_ButtonListener(this));
+		//standardpostagger.addActionListener(new ContentFeatures.SPT_ButtonListener());
 		back.addActionListener(new BackButtonListener(this));
  
 		panel_content.add(label);
-		panel_content.add(standardpostagger);
+		//panel_content.add(standardpostagger);
 		panel_content.add(features_CBF);
 		panel_content.add(back);
 		
 		this.add(panel_content);
 	}
-	
+	/*
 	private class CBF_ButtonListener implements ActionListener {	
 		ContentFeatures content_features;
 
@@ -66,7 +66,7 @@ public class ContentFeatures extends JFrame{
 		}
 	}
 
-	private class SPT_ButtonListener implements ActionListener {	
+	class SPT_ButtonListener implements ActionListener {	
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
@@ -82,6 +82,8 @@ public class ContentFeatures extends JFrame{
 			}			
 		}
 	}
+	
+	*/
 	
 	
 	

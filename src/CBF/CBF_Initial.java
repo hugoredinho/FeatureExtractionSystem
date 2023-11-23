@@ -23,14 +23,14 @@ import AuxiliarFiles.*;
  *  
  *  Executar:
  *  Se quiser por exemplo extrair os unigramas da pasta origem sem fazer st ou sw e em que a 
- *  representação das features corresponde à freq, coloco nos argumentos: 'origem unig nada freq'. O
+ *  representaï¿½ï¿½o das features corresponde ï¿½ freq, coloco nos argumentos: 'origem unig nada freq'. O
  *  resultado vai ser guardado no ficheiro 'unig_nada_freq.csv'. O mesmo se passa para todas as 
- *  outras combinações. 
+ *  outras combinaï¿½ï¿½es. 
  *  
  *  Na pasta origem posso ter:
- *  - letras de música (nesse caso devolve os n-gramas presentes na letra
- *  - POS tags de cada música (nesse caso tenho que antes aplicar a cada letra o projeto 'StanfordPOSTagger'
- *  para cada ficheiro em origem conter as POSTags de cada música
+ *  - letras de mï¿½sica (nesse caso devolve os n-gramas presentes na letra
+ *  - POS tags de cada mï¿½sica (nesse caso tenho que antes aplicar a cada letra o projeto 'StanfordPOSTagger'
+ *  para cada ficheiro em origem conter as POSTags de cada mï¿½sica
  *    
  * @author rsmal
  * @version 2.0 (2014-10-17)
@@ -43,13 +43,21 @@ public class CBF_Initial {
 	Pipe pipe;
 	String arg1,arg2,arg3;
 
-	public CBF_Initial(String sourceFolder1, String arg1, String arg2, String arg3) throws IOException {
+	public CBF_Initial(String sourceFolder1, String arg1, String arg2, String arg3, boolean isPOS) throws IOException {
 		if(sourceFolder1 != null && !sourceFolder1.isEmpty()) {
 			sourceFolder = sourceFolder1;				
 		}
 		else {
 			sourceFolder = "src/Origem/";
 		}
+		
+		// if the folder is POS, then sourceFolder is origemPos
+		
+		if (isPOS) {
+			sourceFolder = "src/Origem_POS";
+		}
+		
+		
 		this.arg1 = arg1;
 		this.arg2 = arg2;
 		this.arg3 = arg3;
@@ -58,15 +66,20 @@ public class CBF_Initial {
 		InstanceList instances = readDirectory(new File(sourceFolder));
 		SaveInstancesInFile sinstances = new SaveInstancesInFile(instances, arg3);
 		if (arg3.equals("freq")) {
-			sinstances.execute_freq(arg1,arg2);
+			sinstances.execute_freq(arg1,arg2, isPOS);
 		} else if (arg3.equals("bool")) {
-			sinstances.execute_bool(arg1,arg2);
+			sinstances.execute_bool(arg1,arg2, isPOS);
 		} else if (arg3.equals("tfidf")) {
-			sinstances.execute_tfidf(arg1,arg2);
+			sinstances.execute_tfidf(arg1,arg2, isPOS);
 		} else if (arg3.equals("norm")) {
-			sinstances.execute_norm(arg1,arg2);
+			sinstances.execute_norm(arg1,arg2, isPOS);
 		}
 	}
+	
+	
+	
+	
+	
 
 	@SuppressWarnings("unchecked")
 	public Pipe buildPipe() {

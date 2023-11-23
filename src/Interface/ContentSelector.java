@@ -8,11 +8,13 @@ import java.util.Enumeration;
 import javax.swing.*;
 
 import CBF.CBF_Initial;
+import CBF.CBF_Initial_Tags;
 
 public class ContentSelector extends JFrame{
 	JPanel panel_content;
 	JRadioButton unig,big,trig,grams4,grams5,nada,st,sw,st_sw,freq,bool,tfidf,norm;
 	JButton confirm,back;
+	JRadioButton tags;
 	JLabel label;
 	String sourceFolder;
 	public ContentSelector(String sourceFolder,ContentFeatures content_features) {
@@ -62,7 +64,7 @@ public class ContentSelector extends JFrame{
 		
 		freq = new JRadioButton("freq");
 		bool = new JRadioButton("bool"); 
-		tfidf = new JRadioButton("tfdif"); 
+		tfidf = new JRadioButton("tfidf"); 
 		norm = new JRadioButton("norm"); 
 		
 		freq.setBounds(250,50,70,25);
@@ -78,13 +80,17 @@ public class ContentSelector extends JFrame{
 		
 		back = new JButton("Back");
 		
+		tags = new JRadioButton("POS_Tags");
+		
 		label = new JLabel("Quais features de conteudo deseja extrair?");
 		
 		label.setBounds(75,10,300,25);
 
 
-		back.setBounds(200,150,120,25);
-		confirm.setBounds(50,150,120,25);
+		back.setBounds(240,150,90,25);
+		confirm.setBounds(40,150,90,25);
+		tags.setBounds(140,150,90,25);
+		
 		
 		back.addActionListener(new BackButtonListener(this));
  
@@ -93,9 +99,11 @@ public class ContentSelector extends JFrame{
 		panel_content.add(nada);panel_content.add(st);panel_content.add(sw);panel_content.add(st_sw);
 		panel_content.add(freq);panel_content.add(bool);panel_content.add(tfidf);panel_content.add(norm);
 		panel_content.add(confirm);
+		panel_content.add(tags);
 		panel_content.add(back);
 		
 		this.add(panel_content);
+		
 		
 		confirm.addActionListener(new confirmButtonListener(bg1,bg2,bg3));
 	}
@@ -109,12 +117,17 @@ public class ContentSelector extends JFrame{
 		}	
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// now we want to get the value of the tags radio button
+
+			boolean POS_tags = tags.isSelected();
+
 			String s_bg1 = getSelectedButtonText(bg1);
 			String s_bg2 = getSelectedButtonText(bg2);
 			String s_bg3 = getSelectedButtonText(bg3);
-			
+			System.out.println( s_bg3 );
+		
 			try {
-				CBF_Initial initial = new CBF_Initial(sourceFolder,s_bg1,s_bg2,s_bg3);
+				CBF_Initial initial = new CBF_Initial(sourceFolder,s_bg1,s_bg2,s_bg3, POS_tags);
 				JOptionPane.showMessageDialog(null, "Todas CBF features extraidas", "Mensagem", JOptionPane.PLAIN_MESSAGE);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -122,7 +135,6 @@ public class ContentSelector extends JFrame{
 			}
 		}
 	}
-
 
     public String getSelectedButtonText(ButtonGroup buttonGroup) {
     	

@@ -58,7 +58,7 @@ public class SaveInstancesInFile {
 	 * @param args
 	 * @throws IOException
 	 */
-	public void execute_freq(String arg1, String arg2) throws IOException {
+	public void execute_freq(String arg1, String arg2, boolean isPOS) throws IOException {
 
 		int i = 0;
 		this.initializeMatrix(matrix);
@@ -88,6 +88,9 @@ public class SaveInstancesInFile {
 		 */
 		
 		//this.writeMatrixInConsole(matrix);
+		if (isPOS) {
+			arg1 = "POS_" + arg1;
+		}		
 		String nameFile1 = "src/Output/CBF_" + arg1 + "_" + arg2 + "_" + FREQ;
 		
 		File file2 = new File(nameFile1 + ".csv");
@@ -110,7 +113,7 @@ public class SaveInstancesInFile {
 	 * @throws IOException
 	 */
 	
-	public void execute_bool(String arg1, String arg2) throws IOException {
+	public void execute_bool(String arg1, String arg2, boolean isPOS) throws IOException {
 
 		int i = 0;
 		this.initializeMatrix(matrix);
@@ -131,6 +134,9 @@ public class SaveInstancesInFile {
 		 * todas as liricas
 		 */
 		this.calculateBoolValues();
+		if (isPOS) {
+			arg1 = "POS_" + arg1;
+		}
 		//this.writeMatrixInConsole(matrix);
 		String nameFile2 = "src/Output/CBF_" + arg1 + "_" + arg2 + "_" + BOOL;
 		//File file3 = new File(nameFile2 + "F.txt");
@@ -150,7 +156,7 @@ public class SaveInstancesInFile {
 	 */
 	
 	
-	public void execute_norm(String arg1, String arg2) throws IOException {
+	public void execute_norm(String arg1, String arg2, boolean isPOS) throws IOException {
 		int i = 0;
 		this.initializeMatrix(matrix);
 		while (i < lin) {
@@ -175,6 +181,13 @@ public class SaveInstancesInFile {
 		 */
 		this.calculatenormValues();
 		this.writeMatrixInConsole(matrix);
+		
+		// if isPos, then we add "POS_" to the start of the name of the file
+		
+		if (isPOS) {
+			arg1 = "POS_" + arg1;
+		}
+
 		String nameFile2 = "src/Output/CBF_" + arg1 + "_" + arg2 + "_" + NORM;
 		//File file3 = new File(nameFile2 + "F.txt");
 		//this.writeNamesOfFeaturesNames(file3);
@@ -273,7 +286,7 @@ public class SaveInstancesInFile {
 	 */
 	
 	
-	public void execute_tfidf(String arg1, String arg2) throws IOException {
+	public void execute_tfidf(String arg1, String arg2, boolean isPOS) throws IOException {
 
 		int i = 0;
 		this.initializeMatrix(matrix);
@@ -288,7 +301,8 @@ public class SaveInstancesInFile {
 			i++;
 
 		}
-		//System.out.println(instances.getAlphabet());
+		
+		System.out.println(instances.getAlphabet());
 
 		// aqui ter um if para mandar escrever no ecra uma unica matriz
 		// this.writeMatrixInConsole(matrix);
@@ -297,18 +311,33 @@ public class SaveInstancesInFile {
 		 * Guardar em ficheiro as features da freq e a matriz com as freq de
 		 * todas as liricas
 		 */
+		
+		System.out.println("Calculating tfidf values");
 		this.calculatetfidfValues();
+		
+		//System.out.println("Writing in console");
 		//this.writeMatrixInConsole(matrix);
+		
+		if (isPOS) {
+			arg1 = "POS_" + arg1;
+		}
+		
 		String nameFile2 = "src/Output/CBF_" + arg1 + "_" + arg2 + "_" + TFIDF;
 		//File file3 = new File(nameFile2 + "F.txt");
 		//this.writeNamesOfFeaturesNames(file3);
+		
 		File file4 = new File(nameFile2 + ".csv");
+		System.out.println("Writing to " + file4) ;
 		this.writeMatrixInFile(matrix, file4);
+		
+		System.out.println("Finished writing!");
 
 	}
 
 	private void calculatetfidfValues() {
 
+		
+		System.out.println("First step!");
 		// calcular o maxtfij
 		double[][] maxfij = new double[this.getNumberOfInstances()][1];
 		for (int i = 1; i <= this.getNumberOfInstances(); i++) {
@@ -323,7 +352,7 @@ public class SaveInstancesInFile {
 
 		}
 
-		
+		System.out.println("Second step!");
 		// idfi = log2(N/ni)
 		int N = this.getNumberOfInstances();
 		double[][] ni = new double[1][this.getSizeAlphabet()];
@@ -339,6 +368,7 @@ public class SaveInstancesInFile {
 			ni[0][j - 1] = max;
 		}
 
+		System.out.println("Third step!");
 		double[][] idfi = new double[1][this.getSizeAlphabet()];
 		for (int i = 0; i < idfi[0].length; i++) {
 			double aux = N / ni[0][i];
@@ -346,7 +376,7 @@ public class SaveInstancesInFile {
 			idfi[0][i] = this.log(aux, 2);
 		}
 
-	
+		System.out.println("Fourth step!");
 		//System.gc();
 		// calcular tfij = fij / maxtfij
 		for (int i = 1; i <= this.getNumberOfInstances(); i++) {
@@ -358,20 +388,29 @@ public class SaveInstancesInFile {
 
 		}
 				
-
+		System.out.println("Final step!");
 		// wij = tfi * idfi
+
+		// we want to add to this function that if aux2 == 0, then we simply add "0 to the matrix"
 		DecimalFormat aux3 = new DecimalFormat("0.##");
 		for (int i = 1; i < this.getNumberOfInstances(); i++) {
+			System.out.println("Instance " + i + "/" + this.getNumberOfInstances());
 			for (int j = 1; j < this.getSizeAlphabet()+1; j++) {
-				double aux2 = (Double.parseDouble(matrix[i][j]))
-						* (idfi[0][j - 1]);
-				String aux4 = aux3.format(aux2).replace(",",".");
+				double aux2 = (Double.parseDouble(matrix[i][j])) * (idfi[0][j - 1]);
 
-				matrix[i][j] = aux4;
-
+				if (aux2 == 0) {
+					matrix[i][j] = "0";
+				} else {
+					String aux4 = aux3.format(aux2).replace(",",".");
+					matrix[i][j] = aux4;
+				}
 			}
 
 		}
+		
+
+
+
 
 	}
 
@@ -507,6 +546,7 @@ public class SaveInstancesInFile {
 			file.createNewFile();
 		}
 
+		System.out.println("Starting to write to file!");
 		System.out.println(file.getAbsolutePath());
 		// abre o ficheiro anterior para escrita
 		BufferedWriter out = new BufferedWriter(new FileWriter(file));
@@ -637,12 +677,18 @@ public class SaveInstancesInFile {
 	 * @return String data[1]
 	 */
 	private String getNameOfInstance(String name) {
-		// atencao a esta instrucao que so funciona se o file estiver na pasta
-		// origem/
-		String data[] = name.split("Origem");
-		//String data[] = name.split("771");
+		// Print the input name
+		System.out.println(name);
+
+		// Extract the folder name from the path
+		String[] pathSegments = name.split("/");  // split the path into segments
+		String folderName = pathSegments[pathSegments.length - 2];  // get the second last segment as folder name
+
+		// Split name by the folder name and return the desired part
+		String data[] = name.split(folderName);
 		return data[1];
 	}
+
 
 	/**
 	 * devolve o nº de palavras de todos os documentos exceptuando as stopwords.

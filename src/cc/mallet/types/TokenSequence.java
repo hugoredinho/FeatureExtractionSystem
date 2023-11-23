@@ -103,7 +103,7 @@ public class TokenSequence extends ArrayList<Token> implements Sequence, Seriali
 	}
 
 	// added by Fuchun Peng, Oct. 24, 2003
-	public Object removeLast () {
+	public Token removeLast () {
 		if (this.size() > 0) 
 			return this.remove (this.size() - 1);
 		else

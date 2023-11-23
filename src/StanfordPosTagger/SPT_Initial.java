@@ -42,7 +42,7 @@ public class SPT_Initial {
 	int option;
 	
 	//output folder
-	String outputFolder  = "src/Output/";
+	String outputFolder  = "src/Origem_POS/";
 	
 	String outputFile;
 	
