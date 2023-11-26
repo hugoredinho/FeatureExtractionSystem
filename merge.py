@@ -479,7 +479,7 @@ def merge_folders():
     folder_path = r"src/Feature Stuff/133_features"
     #check_csv_for_id_column("src/Output")
     print("--------------PROCESSING CSV FILES---------------\n\n\n")
-    #process_csv_files(folder_path,"133_features.csv")
+    process_csv_files(folder_path,"133_features.csv")
     print("--------------MAKIG ANNOTATIONS---------------\n\n\n")
     make_annotations_file("133",folder_path)
     #go_through_folder_and_print_csv_rows(folder_path)

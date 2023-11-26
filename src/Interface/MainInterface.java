@@ -228,9 +228,7 @@ public class MainInterface extends JFrame{
 			try {
 				// semantic
 				String inputFile = sourceFolder;
-				
-				
-				
+
 				
 			    // gazeteers
 				CombinedFeatures gaz = new CombinedFeatures(false,1,false,false,false,false,inputFile,null);
@@ -277,8 +275,8 @@ public class MainInterface extends JFrame{
 				cbf = new CBF_Initial(sourceFolder,"big","st","tfidf", false);
 				cbf = new CBF_Initial(sourceFolder,"trig","nada","freq", false);
 				cbf = new CBF_Initial(sourceFolder,"trig","nada","tfidf", false);
-				cbf = new CBF_Initial(sourceFolder,"trig","st","freq", false);
-				cbf = new CBF_Initial(sourceFolder,"trig","st","tfidf", false);
+				//cbf = new CBF_Initial(sourceFolder,"trig","st","freq", false);
+				//cbf = new CBF_Initial(sourceFolder,"trig","st","tfidf", false);
 				
 				// now with pos
 				cbf = new CBF_Initial(sourceFolder,"unig","nada","tfidf", true);
