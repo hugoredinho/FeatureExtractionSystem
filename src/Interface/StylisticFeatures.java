@@ -81,7 +81,7 @@ public class StylisticFeatures extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			try {
-				CombinedFeatures initial_WD  = new CombinedFeatures(false,0,false,false,false,true,sourceFolder,null);
+				CombinedFeatures initial_WD  = new CombinedFeatures(false,0,false,false,false,true,false,sourceFolder,null);
 				JOptionPane.showMessageDialog(null, "Features Slang extraidas", "Mensagem", JOptionPane.PLAIN_MESSAGE);
 			} catch (ClassNotFoundException | IOException e1) {
 				// TODO Auto-generated catch block
@@ -96,7 +96,7 @@ public class StylisticFeatures extends JFrame{
 			// TODO Auto-generated method stub
 			try {
 				CapitalLetters_Initial capitalLetters = new CapitalLetters_Initial(false,sourceFolder,null);
-				CombinedFeatures initial_WD  = new CombinedFeatures(false,0,false,false,false,true,sourceFolder,null);
+				CombinedFeatures initial_WD  = new CombinedFeatures(false,0,false,false,false,true,false,sourceFolder,null);
 				combineStylistic("src/Output");
 				JOptionPane.showMessageDialog(null, "Todas features estilisticas extraidas", "Mensagem", JOptionPane.PLAIN_MESSAGE);
 			} catch (ClassNotFoundException | IOException e1) {

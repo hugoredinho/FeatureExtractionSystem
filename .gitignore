@@ -5,3 +5,5 @@
 /.metadata/
 *.csv
 **/*.mp3
+merged_files/*
+/merged_files/

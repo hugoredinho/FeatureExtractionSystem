@@ -11,5 +11,12 @@
 	<classpathentry kind="lib" path="src/AuxiliarFiles/stanford-postagger-2011-04-20.jar"/>
 	<classpathentry kind="lib" path="src/AuxiliarFiles/stanford-postagger.jar"/>
 	<classpathentry kind="lib" path="src/AuxiliarFiles/mallet-deps.jar"/>
+	<classpathentry kind="lib" path="src/AuxiliarFiles/commons-math4-legacy-4.0-beta1.jar" sourcepath="src/AuxiliarFiles/commons-math4-legacy-4.0-beta1-sources.jar"/>
+	<classpathentry kind="lib" path="src/AuxiliarFiles/commons-math4-legacy-exception-4.0-beta1.jar"/>
+	<classpathentry kind="lib" path="/src/AuxiliarFiles/commons-math4-legacy-core-4.0-beta1.jar"/>
+	<classpathentry kind="lib" path="/src/AuxiliarFiles/commons-math4-core-4.0-beta1.jar"/>
+	<classpathentry kind="lib" path="/src/AuxiliarFiles/commons-math4-neuralnet-4.0-beta1.jar"/>
+	<classpathentry kind="lib" path="/src/AuxiliarFiles/commons-math4-transform-4.0-beta1.jar"/>
+	<classpathentry kind="lib" path="/src/AuxiliarFiles/commons-numbers-core-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

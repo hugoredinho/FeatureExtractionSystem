@@ -149,7 +149,7 @@ public class WriteOperations {
 	 * 
 	 * @throws IOException
 	 */
-	public void writeMatrixInFile2(String[][] matrix, String filename,boolean WordsDictionaryFeatures, boolean DAL_ANEWFeatures)
+	public void writeMatrixInFile2(String[][] matrix, String filename,boolean WordsDictionaryFeatures, boolean hasDominance)
 			throws IOException {
 
 		if (!filename.endsWith(".csv")) {
@@ -173,12 +173,13 @@ public class WriteOperations {
 		if(WordsDictionaryFeatures) {
 			out.write("Id,Count");
 		}else {
-			if(DAL_ANEWFeatures){		
-				out.write("Id,AvgValence,AvgArousal,AvgDominance");
+			if(hasDominance){		
+				//out.write("Id,AvgValence,AvgArousal,AvgDominance");
+				out.write("Id,AvgValence,AvgArousal,AvgDominance,#Count,StdDevValence,SkewnessValence,KurtosisValence,MaxValence,MinValence,MedianValence,StdDevArousal,SkewnessArousal,KurtosisArousal,MaxArousal,MinArousal,MedianArousal,StdDevDominance,SkewnessDominance,KurtosisDominance,MaxDominance,MinDominance,MedianDominance");
 			}else {
-				out.write("Id,AvgValence,AvgArousal,#Count");
-			}
-			
+				//out.write("Id,AvgValence,AvgArousal,#Count");
+				out.write("Id,AvgValence,AvgArousal,#Count,StdDevValence,SkewnessValence,KurtosisValence,MaxValence,MinValence,MedianValence,StdDevArousal,SkewnessArousal,KurtosisArousal,MaxArousal,MinArousal,MedianArousal");
+			}		
 		}
 		out.newLine();
 		for (int i = 0; i < matrix.length; i++) {

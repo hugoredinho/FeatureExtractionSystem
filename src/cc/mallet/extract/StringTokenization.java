@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 
+import cc.mallet.types.Token;
 import cc.mallet.types.TokenSequence;
 import cc.mallet.util.CharSequenceLexer;
 
@@ -64,10 +65,11 @@ public class StringTokenization extends TokenSequence implements Tokenization
     return new StringSpan (document, startIdx, endIdx);
   }
 
-  public void removeLast() {
+  public Token removeLast() {
 	    if(size() > 0) {
 	        remove(size() - 1);
 	    }
+		return null;
 	  }
   
 

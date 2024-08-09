@@ -109,10 +109,14 @@ def merge_csvs(folder_path, file_name_final):
     print(f"Data shape: {merged_df.shape}")
     print(f"Saved merged dataframe to {file_name_final}.")
 
-def make_annotations_file(file_name,folder_path):
+def make_annotations_file(file_name,folder_path, without_CBF=False):
     #previous_file = r"C:\Users\Red\Desktop\Investigacao2020\datasets\dataset_180\180_info_new.csv"~
     previous_file = r"C:\Users\Red\Desktop\tese\Final 230810 Datasets\complete lyrical dataset\merge_lyrics_complete_metadata.csv"
-    dataframe_features = pl.read_csv(file_name + "_features.csv",columns=["IdSong"])
+    if not without_CBF:
+        dataframe_features = pl.read_csv(file_name,columns=["IdSong"])
+    else: 
+        #dataframe_features = pl.read_csv(file_name + "_features_without_CBF.csv",columns=["IdSong"])  
+        dataframe_features = pl.read_csv(file_name,columns=["IdSong"]) 
 
     # this is a series so we need to covert to list
     order = dataframe_features["IdSong"].to_list()
@@ -141,9 +145,38 @@ def make_annotations_file(file_name,folder_path):
     print(new_dataframe)
 
     print(len(new_dataframe), len(order))
+
+    if len(new_dataframe) != len(order):
+        # we print the songs that are missing:
+        for value in order:
+            value_upper = value.upper()
+            if value_upper not in dictionary:
+                additional_path = r"C:\Users\Red\Desktop\Investigacao2020\datasets\New Datasets\new big lyrical dataset\762"
+                # here there are four folders, q1 through q4, we want to check in which folder the song is
+                for folder in os.listdir(additional_path):
+                    folder_path = os.path.join(additional_path,folder)
+                    if os.path.exists(os.path.join(folder_path,value_upper + ".txt")):
+                        print("Found %s in %s" % (value_upper, folder))
+                        # and now we want to add it to the dataframe
+                        #new_dataframe = new_dataframe.append({"Song":value_upper,"Quadrant":folder},ignore_index=True)
+                        new_dataframe = pd.concat([new_dataframe,pd.DataFrame([[value,folder]],columns=columns)],ignore_index=True)
+                        break
+                else:
+                    print("Couldn't find %s" % value_upper)
+                    exit(-1)
+
+    # but now, the order might not bee the same, so we need to set new_dataframe to have the same order as order
+
+    #original_order = [x.upper() for x in order]   
+    original_order = order       
+    new_dataframe = new_dataframe.set_index("Song")
+    new_dataframe = new_dataframe.reindex(index=original_order)
+    new_dataframe = new_dataframe.reset_index()
+
     assert(len(new_dataframe) == len(order))
 
-    new_dataframe.to_csv("%s_annotations.csv" % (file_name), index=False)
+    #new_dataframe.to_csv("%s_annotations.csv" % (file_name), index=False)
+    new_dataframe.to_csv("942_annotations.csv", index=False)
 
 
 
@@ -171,7 +204,7 @@ def check_csv_for_id_column(folder_path):
     else:
         print("All CSV files have the 'Id' column.")
 
-def process_csv_files(folder_path, file_name_final):
+def process_csv_files(folder_path, file_name_final, without_CBF=False):
     dfs = []  # List to hold DataFrames
 
     first_file = True
@@ -181,16 +214,21 @@ def process_csv_files(folder_path, file_name_final):
     for filename in os.listdir(folder_path):
         # Check if it's a csv file
         if filename.endswith('.csv'):
-            print("Processing " + filename)
+            #print("Processing " + filename)
             file_path = os.path.join(folder_path, filename)
 
             current_index = os.listdir(folder_path).index(filename)
 
-            if "CBF_trig_st" in filename:
+            if "CBF_trig_st" in filename or "CBF_big_st" in filename:
                 continue
             
+            if without_CBF:
+                if "CBF" in filename:
+                    continue
+            
+                
             # Read the csv file into a polars DataFrame
-            df = pl.read_csv(file_path)
+            df = pl.read_csv(file_path, infer_schema_length=10000)
             df = df.fill_nan(0)
 
             columns = df.columns
@@ -239,14 +277,13 @@ def process_csv_files(folder_path, file_name_final):
             df = df.rename(new_columns)
 
             # Save the modified DataFrame back to the csv file
-            df.write_csv(file_path)
+            #df.write_csv(file_path)
             print("Processed %s, %d/%d, current data shape: %s" % (filename, len(dfs), len(total_files), df.shape))
 
             dfs.append(df)
             if filename == "":
                 break
 
-    
     # Concatenate all DataFrames horizontally
     merged_df = pl.concat(dfs, how = "horizontal")
 
@@ -410,24 +447,34 @@ def go_through_folder_and_print_csv_rows(folder_path):
 
             print(file_name, len(df), df.width)
     
-def merge_audio_and_lyric_files():
-    #audio_file = "full_bimodal_final_all_features_with_audio_fix.csv"
-    #lyrics_file = "bimodal_full_features_good_features_with_lyric.csv"
+def merge_audio_and_lyric_files(audio_file, lyrics_file, final_name):
+    first_folder = R"G:\Saving_Feature"
+
     #lyrics_file = "bimodal_balanced_features_good_features_with_lyric.csv"
     #audio_file = "balanced_bimodal_final_all_features_with_audio_fix.csv"
-    audio_file = "133_audio_features.csv"
-    lyrics_file = "133_features_good_features_with_lyric.csv"
+    #audio_file = "133_audio_features.csv"
+    #lyrics_file = "133_features_without_CBF.csv"
 
-    df_lyrics = pd.read_csv(lyrics_file)
-    df_audio = pd.read_csv(audio_file)
+    audio_file = os.path.join(first_folder, audio_file)
+    lyrics_file = os.path.join(first_folder, lyrics_file)
+
+    print("Reading audio and lyrics files")
+    df_audio = pl.read_csv(audio_file,infer_schema_length=10000).to_pandas()
+    print("Read audio file")
+    df_lyrics = pl.read_csv(lyrics_file,infer_schema_length=10000).to_pandas()
+
 
     # first we assure that the df_lyrics["IdSong"] and df_audio["IdSong"] are the same
 
     df_lyrics_id = df_lyrics["IdSong"].tolist()
 
+    df_lyrics_id = [x.upper() for x in df_lyrics_id]
+
     # now we conver df_lyrics_id to list but can't use pandas tolist() because it returns a series
 
     df_audio_id = df_audio["IdSong"].tolist()
+
+    df_audio_id = [x.upper() for x in df_audio_id]
 
     for i in range(len(df_audio_id)):
         print(df_audio_id[i], df_lyrics_id[i])
@@ -445,7 +492,13 @@ def merge_audio_and_lyric_files():
 
     print("Merged has %d rows and %d columns" % (len(df_merged), df_merged.shape[1]))
 
-    df_merged.to_csv("133_audio_lyrics.csv", index=False)
+    df_merged = pl.from_pandas(df_merged)
+
+    output_folder = os.path.join(first_folder, "merged_files")
+
+    output_file_name = os.path.join(output_folder, final_name)
+
+    df_merged.write_csv(output_file_name)
 
 
 def change_columns():
@@ -476,13 +529,52 @@ def merge_folders():
 
     # need to make code here to get rid of "classe" etc
 
-    folder_path = r"src/Feature Stuff/133_features"
-    #check_csv_for_id_column("src/Output")
-    print("--------------PROCESSING CSV FILES---------------\n\n\n")
-    process_csv_files(folder_path,"133_features.csv")
-    print("--------------MAKIG ANNOTATIONS---------------\n\n\n")
-    make_annotations_file("133",folder_path)
+    #path = r"C:\Users\Red\Desktop\tese\Codigo_tese\Letra_Ricardo\FeatureExtractionSystem-master\Feature Stuff"
+    path = r"G:\Saving_Feature\Feature Stuff"
+
+    # what we want to do, is go onto the main folder, the "lyric_full_features"folder, and create subsets of the files for each folder
+
+    # first we need to get the list of files in the main folder
+    list_folders = os.listdir(path)
+    list_folders = [x for x in list_folders if "features" in x]
+
+    without_CBF = True
+
+    path_for_r = r"C:\Users\Red\Desktop\tese\calculate_top_features\data"
+
+    #for folder in list_folders:
+        #check_csv_for_id_column("src/Output")
+    
+    folders = ["bimodal_balanced_features_v2","bimodal_full_features_v2"]
+    #folder = "bimodal_balanced_features_v2"
+
+    for folder in folders:
+        print("Processing %s" % folder)
+
+        if not without_CBF:
+            file_name = "%s.csv" % (folder)
+        else:
+            file_name = "%s_without_CBF.csv" % (folder)
+
+        if "_v2" in file_name:
+            file_name = file_name.replace("_v2","")
+
+
+        annotations_file = "%s_annotations.csv" % (folder.replace("_features","").replace("_v2",""))
+        folder_path = os.path.join(path, folder)
+        if not os.path.exists(file_name):
+            print("--------------PROCESSING CSV FILES---------------\n\n\n")
+            process_csv_files(folder_path,file_name, without_CBF=without_CBF)
+        #if not os.path.exists(annotations_file):
+            #print("--------------MAKIG ANNOTATIONS---------------\n\n\n")
+            #make_annotations_file(folder.replace("_features",""),folder_path, without_CBF=without_CBF)
+        #make_annotations_file("lyric_full_features_without_CBF.csv",folder_path, without_CBF=without_CBF)
+
+        print("Copying %s and %s to %s" % (file_name, annotations_file, path_for_r))
+        shutil.copy(file_name, path_for_r)
+        #shutil.copy(annotations_file, path_for_r)
     #go_through_folder_and_print_csv_rows(folder_path)
+
 
 def make_180_audio_features():
     lyric_180_file = "133_audio_features.csv"
@@ -521,7 +613,110 @@ def copy_133():
             print("Couldn't find %s" % file_path)
             exit(-1)
 
+def split_files():
+    #path = r"C:\Users\Red\Desktop\tese\Codigo_tese\Letra_Ricardo\FeatureExtractionSystem-master\Feature Stuff"
+    path = r"G:\Saving_Feature\Feature Stuff"
+
+    #file_list = ["Capital_Letters_Slang.csv","GI_Features.csv","Gazeteers_DAL_ANEW.csv","Synesketch.csv"]
+    file_list = ["Gazeteers_DAL_ANEW_Warriner_NRCVAD.csv"]
+
+    main_folder = "lyric_full_features"
+
+    file_to_read = "CBF_POS_unig_nada_freq.csv"
+
+    # what we want to do, is go onto the main folder, the "lyric_full_features"folder, and create subsets of the files for each folder
+
+    # first we need to get the list of files in the main folder
+
+    main_folder_path = os.path.join(path, main_folder)
+
+    #list_folders = os.listdir(path)
+
+    #list_folders = [x for x in list_folders if "features" in x and (x != main_folder)]
+
+    list_folders = ["bimodal_balanced_features_v2","bimodal_full_features_v2","lyric_balanced_features"]
+
+    for folder in list_folders:
+        file_to_read_path = os.path.join(path, folder, file_to_read)
+        # we want to read from this file the "Id" column to create the subset
+
+        df = pl.read_csv(file_to_read_path, columns=["Nome"])
+        df = df.rename({"Nome": 'Id'})
+
+        df = df.with_columns(df['Id'].str.replace("/", "").alias("Id"))
+        df = df.with_columns(df['Id'].str.replace("_with_POStags", "").alias("Id"))
+        df = df.with_columns(df['Id'].str.replace(".txt", "").alias("Id"))
+
+        subset_id_list = df["Id"].to_list()
+
+        # now  we upper
+
+        subset_id_list = [x.upper() for x in subset_id_list]
+
+        for file in file_list:
+            file_path = os.path.join(main_folder_path, file)
+            print(file_path)
+
+            df_file_original = pl.read_csv(file_path)
+
+            first_column = df_file_original.columns[0]
+
+            for row in df_file_original.iter_rows(named=True):
+                row[first_column] = row[first_column].upper()
+            # now we want to make the first column upper
+
+            # now we create a subset of this file where the "Id" column is in the id_list, we cant use isin because it's series
+
+            df_file = df_file_original.filter(pl.col(first_column).is_in(subset_id_list))
+
+            # we find the ones that are missing fro mthe subset
+
+            missing = [x for x in subset_id_list if x not in df_file[first_column].to_list()]
+
+            print("Missing %d" % len(missing))
+
+            if len(missing) > 0:
+                print(missing)
+
+            # then we want to assert that the length of this file is the same as the length of the id_list
+
+            print("Length of subset: %d" % len(df_file))
+            print("Length of id list: %d" % len(subset_id_list))
+
+            assert(len(df_file) == len(subset_id_list))
+
+            # now we want to save this file to a new folderº
+
+            final_file_path = os.path.join(path, folder, file)
+
+            df_file.write_csv(final_file_path)
+
+            print("Saved %s" % final_file_path)
+            
+def add_annotations(features_file,annotations_file):
+    features_file = "merged_files" + "/" + features_file
+
+    df_features = pl.read_csv(features_file,infer_schema_length=10000).to_pandas()
+    df_annotations = pl.read_csv(annotations_file,infer_schema_length=10000).to_pandas()
+
+    df_annotations = df_annotations.rename(columns={"Song":"IdSong"})
+
+    df_merged = pd.merge(df_features, df_annotations, on="IdSong")
+
+    print("Length of features: %d" % len(df_features))
+    print("Length of annotations: %d" % len(df_annotations))
+
+    print("Length of merged: %d" % len(df_merged))
+
+    assert(len(df_merged) == len(df_features))
+
+    df_merged = pl.from_pandas(df_merged)
+
+    df_merged.write_csv(features_file.replace(".csv","_with_annotations.csv"))
+
+
 if __name__ == "__main__":
+
     #file_path = "src/.csv" 
     #file_path = r"C:\Users\Red\Desktop\tese\Codigo_tese\Letra_Ricardo\FeatureExtractionSystem-master\src\Feature Stuff\teste\teste.csv."
     #check(file_path)
@@ -530,12 +725,52 @@ if __name__ == "__main__":
 
    #
     #add_lyrics_to_names("full_audio_all_features.csv",audio=True)
-    #add_lyrics_to_names("133_features_good_features.csv",audio=False)
+    #add_lyrics_to_names("bimodal_full_features_good_features.csv",audio=False)
+    #add_lyrics_to_names("bimodal_balanced_features_good_features.csv",audio=False)
+    #add_lyrics_to_names("bimodal_full_features_without_CBF_good_features.csv",audio=False)
+    #add_lyrics_to_names("bimodal_balanced_features_without_CBF_good_features.csv",audio=False)
+    #add_lyrics_to_names("bimodal_balanced_features_with_best_CBF.csv",audio=False)
+    #add_lyrics_to_names("bimodal_full_features_with_best_CBF.csv",audio=False)
+
+    #add_lyrics_to_names("bimodal_full_features_without_CBF.csv",audio=False)
+    #add_lyrics_to_names("bimodal_balanced_features_without_CBF.csv",audio=False)
     #replace_mt_with_lyric_codes("full_audio_all_features_with_audio.csv")
-    merge_audio_and_lyric_files()
+
+    
+    #merge_audio_and_lyric_files(audio_file = "full_bimodal_final_all_features_with_audio_fix.csv",lyrics_file = "bimodal_full_features_good_features_with_lyric.csv",final_name="full_bimodal_audio_lyrics_good_features.csv")
+    #merge_audio_and_lyric_files(audio_file = "balanced_bimodal_final_all_features_with_audio_fix.csv",lyrics_file = "bimodal_balanced_features_good_features_with_lyric.csv",final_name="balanced_bimodal_audio_lyrics_good_features.csv")
+    
+    #merge_audio_and_lyric_files(audio_file = "full_bimodal_final_all_features_with_audio_fix.csv",lyrics_file = "bimodal_full_features_without_CBF_good_features_with_lyric.csv",final_name="full_bimodal_audio_lyrics_without_CBF_good_features.csv")
+    #merge_audio_and_lyric_files(audio_file = "balanced_bimodal_final_all_features_with_audio_fix.csv",lyrics_file = "bimodal_balanced_features_without_CBF_good_features_with_lyric.csv",final_name="balanced_bimodal_audio_lyrics_without_CBF_good_features.csv")
+    
+    #merge_audio_and_lyric_files(audio_file = "full_bimodal_final_all_features_with_audio_fix.csv",lyrics_file = "bimodal_full_features_with_best_CBF_with_lyric.csv",final_name="full_bimodal_audio_lyrics_with_best_CBF.csv")
+    #merge_audio_and_lyric_files(audio_file = "balanced_bimodal_final_all_features_with_audio_fix.csv",lyrics_file = "bimodal_balanced_features_with_best_CBF_with_lyric.csv",final_name="balanced_bimodal_audio_lyrics_with_best_CBF.csv")
+
+    merge_audio_and_lyric_files(audio_file = "full_bimodal_final_all_features_with_audio_fix.csv",lyrics_file = "bimodal_full_features_without_CBF_with_lyric.csv",final_name="full_bimodal_audio_lyrics_without_CBF_new.csv")
+    merge_audio_and_lyric_files(audio_file = "balanced_bimodal_final_all_features_with_audio_fix.csv",lyrics_file = "bimodal_balanced_features_without_CBF_with_lyric.csv",final_name="balanced_bimodal_audio_lyrics_without_CBF_new.csv")
+    
+    #merge_audio_and_lyric_files(audio_file = "balanced_bimodal_final_all_features_with_audio_fix.csv",lyrics_file = "bimodal_balanced_features_with_best_CBF_with_lyric.csv",final_name="balanced_bimodal_audio_lyrics_with_best_CBF.csv")
+    
+
+    #add_annotations("full_bimodal_audio_lyrics_without_CBF_good_features.csv","bimodal_full_annotations.csv")
+    #add_annotations("balanced_bimodal_audio_lyrics_without_CBF_good_features.csv","bimodal_balanced_annotations.csv")
+
+    #add_annotations("full_bimodal_audio_lyrics_good_features.csv","bimodal_full_annotations.csv")
+    #add_annotations("balanced_bimodal_audio_lyrics_good_features.csv","bimodal_balanced_annotations.csv")
+
+    #add_annotations("bimodal_full_features_good_features_with_lyric.csv","bimodal_full_annotations.csv")
+    #add_annotations("bimodal_balanced_features_good_features_with_lyric.csv","bimodal_balanced_annotations.csv")
+    #add_annotations("bimodal_full_features_without_CBF_good_features_with_lyric.csv","bimodal_full_annotations.csv")
+    #add_annotations("bimodal_balanced_features_without_CBF_good_features_with_lyric.csv","bimodal_balanced_annotations.csv")
+
     #make_180_audio_features()
     #copy_133()
     #change_columns()
+    #split_files()
+
+    #file_name = "full_bimodal_audio_lyrics_without_CBF_good_features_good_features.csv"
+
+    #make_annotations_file(file_name,"", without_CBF=True)
 
     #df = pl.read_csv(file_path)
 
